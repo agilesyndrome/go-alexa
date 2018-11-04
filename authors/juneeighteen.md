@@ -1,6 +1,8 @@
 #juneeighteen
 
 ## Drew Easley
- AgileSyndro.me founder, father, husband, and ci guru
 
+
+## Contributions
+ (November 2018) : Initial Commit
 
