@@ -1,4 +1,4 @@
-package alexaskill
+package skill
 
 import (
   "context"
@@ -20,24 +20,19 @@ type Skill struct {
 }
 
 var (
-  mySkill Skill = Skill {}
+  My Skill = Skill {}
 )
 
 func init() {
-  mySkill.IntentMap = dispatcher.IntentMap
-  mySkill.RequestMap = dispatcher.RequestMap
+  My.IntentMap = dispatcher.IntentMap
+  My.RequestMap = dispatcher.RequestMap
+  My.UseIoPipe = (os.Getenv("IOPIPE_TOKEN") != "")
 }
 
-func OnLambda(skill_name string) {
+func OnLambda() {
   
-  
-  mySkill.Name = skill_name
-  
-  //If you set IOPIPE_TOKEN, let's assume you want to use it
-  mySkill.UseIoPipe = (os.Getenv("IOPIPE_TOKEN") != "")
-
   //Wrap the LambdaHandler through the IOPipe Logging mechanism... 
-  if (mySkill.UseIoPipe == true) {
+  if (My.UseIoPipe == true) {
     lambda.Start(
       iopipe.WrapHandler(MyLambda),
     )
@@ -49,12 +44,12 @@ func OnLambda(skill_name string) {
 }
 
 func MyLambda(ctx context.Context, req alexa.Request) (alexa.Response, error) {
-  if (mySkill.UseIoPipe == true) {
+  if (My.UseIoPipe == true) {
     iopipe.Tag(ctx, req)
   }
 
-  dispatcher.IntentMap = mySkill.IntentMap
-  dispatcher.RequestMap = mySkill.RequestMap
+  dispatcher.IntentMap = My.IntentMap
+  dispatcher.RequestMap = My.RequestMap
   response, err := dispatcher.Dispatch(req)
   return response, err
 }
